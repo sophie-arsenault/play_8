@@ -1,0 +1,6 @@
+.pytest_cache
+venv
+build
+play_8.egg-info
+.idea
+__pycache__
