@@ -3,6 +3,10 @@ from typing import Set
 
 from play_8 import Plugin
 
+variable_type_int = '''
+selector = 7
+'''
+
 has_text_bad_01 = '''
 selector = ':has-text("sample text")'
 '''
@@ -44,6 +48,10 @@ def _results(s: str) -> Set[str]:
 
 def test_trivial_case():
     assert _results('') == set()
+
+
+def test_variable_type_other_than_string():
+    assert _results(variable_type_int) == set()
 
 
 def test_no_value_preceding_has_text():

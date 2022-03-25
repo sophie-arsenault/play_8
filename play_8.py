@@ -2,6 +2,8 @@ import ast
 import sys
 from typing import Generator, Tuple, Type, Any, List
 
+__version__ = "0.10.0"
+
 if sys.version_info < (3, 8):
     import importlib_metadata
 else:
@@ -19,26 +21,10 @@ class Visitor(ast.NodeVisitor):
     def __init__(self) -> None:
         self.problems: List[Tuple[int, int, str]] = []
 
-    # def visit_Call(self, node: ast.Call) -> None:
-    #     for keyword in node.keywords:
-    #         if (
-    #                 keyword.arg is None and
-    #                 isinstance(keyword.value, ast.Dict) and
-    #                 all(
-    #                     isinstance(key, ast.Str)
-    #                     for key in keyword.value.keys
-    #                 ) and
-    #                 all(
-    #                     key.s.isidentifier()
-    #                     for key in keyword.value.keys
-    #
-    #                 )
-    #         ):
-    #             self.problems.append((node.lineno, node.col_offset))
-    #
-    #     self.generic_visit(node)
-
     def visit_Assign(self, node: ast.Assign) -> Any:
+        if not isinstance(node.value, ast.Constant) or not isinstance(node.value.value, str):
+            return True
+
         if node.value.value.startswith(':has-text("'):
             self.problems.append((node.lineno, node.col_offset, PLY801))
         if '(:has-text("' in node.value.value:
